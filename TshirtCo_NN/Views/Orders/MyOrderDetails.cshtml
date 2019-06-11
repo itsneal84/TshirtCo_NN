@@ -1,0 +1,162 @@
+﻿@model TshirtCo_NN.Models.Order
+@{
+    Layout = null;
+}
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TshirtCo_NN</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <partial name="_CookieConsentPartial" />
+
+<div class="main-content-container">
+    <div class="user-order-form-container">
+        <div class="top-nav-main">
+            <img src="~/images/logo_crop_bw.svg" width="25%"/>
+        </div>
+        <h4>thank you for your order</h4>
+        <h4>order @Model.OrderId</h4>
+        <hr/>
+        <div class="user-form-top">
+            <div class="user-form-left">
+                <dl class="dl-horizontal">
+                    @*<dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>*@
+                    <dt>
+                        name:
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)
+                    </dd>
+                    <dt>
+                        address:
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AddressLn1)
+                    </dd>
+                    <dt>
+                        &nbsp;
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AddressLn2)
+                    </dd>
+                    <dt>
+                        city:
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.City)
+                    </dd>
+                    <dt>
+                        postcode:
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PostCode)
+                    </dd>
+                    <hr/>
+                    <dt>
+                        order date:
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.OrderDate)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <hr/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    product
+                </th>
+                <th>
+                    colour
+                </th>
+                <th>
+                    size:
+                </th>
+                <th>
+                    total quantity:
+                </th>
+                <th>
+                    order total:
+                </th>
+                <th>
+                    payment ref:
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderLines)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+
+                    <td>
+                        @item.Colour
+                    </td>
+                    <td>
+                        small: @item.Small medium: @item.Medium large: @item.Large xlarge: @item.XLarge
+                    </td>
+                    <td>
+                        @(item.Small + item.Medium + item.Large + item.XLarge)
+                    </td>
+                    <td>
+                        £@item.OrderLineTotal
+                    </td>
+                    <td>
+                        @Model.PaymentRef
+                    </td>
+                </tr>
+            }
+            </tbody>
+</table>
+    </div>
+    <div>
+        <a asp-action="UserOrders" class="btn btn-default">back</a>
+    </div>
+</div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+</body>
+</html>

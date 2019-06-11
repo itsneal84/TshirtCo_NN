@@ -1,0 +1,18 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Default";
+}
+
+<div class="navbar-right">
+
+    @if (Model?.OlList?.Count() > 0)
+    {
+        <div class="cart-number">@Model.OlList.Count()<a asp-controller="Orders" asp-action="UserOrders"><img src="~/images/icons/shop_ico.svg" class="user-icon" /></a></div>
+    @*<li>£@(Model.OlList.Sum(s => s.Quantity * s.Product.Price).ToString("f2"))</li>*@
+        if (ViewContext.RouteData.Values["controller"] as string != "Cart")
+        {
+        <a asp-controller="Cart" asp-action="Index" class="btn">checkout</a>
+        }
+    }
+</div>
+

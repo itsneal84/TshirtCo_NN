@@ -1,17 +1,23 @@
-﻿@{
+﻿@model ContactForm
+@{
     ViewData["Title"] = "Contact";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
-
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<div class="form-container">
+    <form asp-controller="Home" asp-action="Index" method="post">
+        <div class="product-text">
+            <label asp-for="Name">Please enter your name:</label>
+            <input type="text" asp-for="Name" />
+        </div>
+        <div class="product-text">
+            <label asp-for="Email">Please enter your email:</label>
+            <input type="email" asp-for="Email" />
+        </div>
+        <div class="product-text">
+            <label asp-for="Message">Add a message:</label>
+            <textarea asp-for="Message"></textarea>
+        </div>
+    </form> 
+</div>

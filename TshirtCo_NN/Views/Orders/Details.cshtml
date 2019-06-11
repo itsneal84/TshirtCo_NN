@@ -1,0 +1,136 @@
+﻿@model TshirtCo_NN.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <form asp-action="Dispatched" method="post">
+    <div class="user-form-top">
+        <div class="user-form-left">
+            <dl class="dl-horizontal">
+                <dt>
+                    customer name:
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)
+                </dd>
+                <dt>
+                    address
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AddressLn1)
+                </dd>
+                <dt>
+                    &nbsp;
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AddressLn2)
+                </dd>
+                <dt>
+                    city
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+                <dt>
+                    postcode
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.PostCode)
+                </dd>
+                <dt>
+                    email:
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Email) 
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <hr/>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        product
+                    </th>
+                    <th>
+                        colour
+                    </th>
+                    <th>
+                        size:
+                    </th>
+                    <th>
+                        total quantity:
+                    </th>
+                    <th>
+                        order total:
+                    </th>
+                    <th>
+                        payment ref:
+                    </th>
+                    <th>
+                        date dispatched
+                    </th>
+                    <th>
+                        dispatched
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+            @foreach (var item in Model.OrderLines)
+            {
+                <tr>
+                    <td align="left">
+                        <input type="hidden" name="ProductId" value="@item.ProductId"/>
+                        <input type="hidden" name="OrderId" value="@item.OrderLineId"/>
+                        @item.Name <input type="hidden" name="ProductName" value="@item.Name"/>
+                    </td>
+
+                    <td align="left">
+                        @item.Colour <input type="hidden" name="ProductColour" value="@item.Colour"/>
+                    </td>
+                    <td align="left">
+                        small: @item.Small <input type="hidden" name="Small" value="@item.Small"/> medium: @item.Medium <input type="hidden" name="Medium" value="@item.Medium"/>
+                        large: @item.Large <input type="hidden" name="Large" value="@item.Large"/> xlarge: @item.XLarge <input type="hidden" name="XLarge" value="@item.XLarge"/>
+                    </td>
+                    <td align="left">
+                        @(item.Small + item.Medium + item.Large + item.XLarge)
+                    </td>
+                    <td align="left">
+                        £@item.OrderLineTotal
+                    </td>
+                    <td align="left">
+                        @Model.PaymentRef
+                    </td>
+                    <td align="left">
+                        @item.DateShipped
+                    </td>
+                    <td align="left">
+                        @if (item.Dispatched == true)
+                        {
+                            @Html.CheckBox("Dispatched", true)
+                            ;
+                        }
+                        else
+                        {
+                            @Html.CheckBox("Dispatched", false, new {onclick = "this.form.submit();", item.ProductId, item.OrderLineId})
+                        }
+
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </form>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

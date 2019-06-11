@@ -10,8 +10,8 @@ using TshirtCo_NN.Data;
 namespace TshirtCo_NN.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190518180100_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190611082615_updates")]
+    partial class updates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -211,16 +211,34 @@ namespace TshirtCo_NN.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("TshirtCo_NN.Models.Colour", b =>
+                {
+                    b.Property<Guid>("ColourId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ColourName");
+
+                    b.HasKey("ColourId");
+
+                    b.ToTable("Colours");
+                });
+
             modelBuilder.Entity("TshirtCo_NN.Models.Design", b =>
                 {
                     b.Property<Guid>("DesignId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid?>("ColourId");
+
                     b.Property<string>("DesignName");
 
                     b.Property<string>("GarmentColourForPrint");
 
+                    b.Property<string>("Image");
+
                     b.HasKey("DesignId");
+
+                    b.HasIndex("ColourId");
 
                     b.ToTable("Designs");
                 });
@@ -230,27 +248,33 @@ namespace TshirtCo_NN.Migrations
                     b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AddressLn1");
+
+                    b.Property<string>("AddressLn2");
+
+                    b.Property<string>("City");
+
                     b.Property<string>("CustomerId");
 
                     b.Property<DateTime?>("DateShipped");
 
                     b.Property<Guid>("DesignId");
 
+                    b.Property<bool>("Dispatched");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
                     b.Property<DateTime?>("OrderDate");
 
                     b.Property<double>("OrderTotal");
 
-                    b.Property<string>("PaymentDetails");
+                    b.Property<string>("PaymentRef");
 
-                    b.Property<string>("ProductColour");
-
-                    b.Property<Guid>("ProductId");
-
-                    b.Property<string>("ProductName");
-
-                    b.Property<string>("ProductSize");
-
-                    b.Property<string>("ShippingAddress");
+                    b.Property<string>("PostCode");
 
                     b.HasKey("OrderId");
 
@@ -264,17 +288,37 @@ namespace TshirtCo_NN.Migrations
                     b.Property<Guid>("OrderLineId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("OrderId");
+                    b.Property<string>("Colour");
+
+                    b.Property<Guid?>("ColoursColourId");
+
+                    b.Property<DateTime?>("DateShipped");
+
+                    b.Property<bool>("Dispatched");
+
+                    b.Property<int>("Large");
+
+                    b.Property<int>("Medium");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid>("OrderId");
 
                     b.Property<double>("OrderLineTotal");
+
+                    b.Property<double>("Price");
 
                     b.Property<Guid>("ProductId");
 
                     b.Property<int>("Quantity");
 
-                    b.Property<double>("UnitPrice");
+                    b.Property<int>("Small");
+
+                    b.Property<int>("XLarge");
 
                     b.HasKey("OrderLineId");
+
+                    b.HasIndex("ColoursColourId");
 
                     b.HasIndex("OrderId");
 
@@ -290,22 +334,36 @@ namespace TshirtCo_NN.Migrations
 
                     b.Property<Guid>("CategoryId");
 
-                    b.Property<string>("Colour")
-                        .IsRequired();
+                    b.Property<string>("Colour");
+
+                    b.Property<Guid>("ColourId");
+
+                    b.Property<Guid?>("DesignsDesignId");
+
+                    b.Property<string>("Image");
+
+                    b.Property<int>("Large");
+
+                    b.Property<int>("Medium");
 
                     b.Property<double>("Price");
 
                     b.Property<string>("ProductName")
                         .IsRequired();
 
-                    b.Property<string>("Size")
-                        .IsRequired();
+                    b.Property<int>("Small");
 
                     b.Property<int>("StockLvl");
+
+                    b.Property<int>("XLarge");
 
                     b.HasKey("ProductId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ColourId");
+
+                    b.HasIndex("DesignsDesignId");
 
                     b.ToTable("Products");
                 });
@@ -377,21 +435,33 @@ namespace TshirtCo_NN.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TshirtCo_NN.Models.Design", b =>
+                {
+                    b.HasOne("TshirtCo_NN.Models.Colour")
+                        .WithMany("Designs")
+                        .HasForeignKey("ColourId");
+                });
+
             modelBuilder.Entity("TshirtCo_NN.Models.Order", b =>
                 {
-                    b.HasOne("TshirtCo_NN.Models.Customer", "Customers")
+                    b.HasOne("TshirtCo_NN.Models.Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId");
                 });
 
             modelBuilder.Entity("TshirtCo_NN.Models.OrderLine", b =>
                 {
+                    b.HasOne("TshirtCo_NN.Models.Colour", "Colours")
+                        .WithMany()
+                        .HasForeignKey("ColoursColourId");
+
                     b.HasOne("TshirtCo_NN.Models.Order", "Order")
                         .WithMany("OrderLines")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TshirtCo_NN.Models.Product", "Product")
-                        .WithMany("OrderLines")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -402,6 +472,15 @@ namespace TshirtCo_NN.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TshirtCo_NN.Models.Colour", "Colours")
+                        .WithMany("Products")
+                        .HasForeignKey("ColourId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TshirtCo_NN.Models.Design", "Designs")
+                        .WithMany("Products")
+                        .HasForeignKey("DesignsDesignId");
                 });
 #pragma warning restore 612, 618
         }

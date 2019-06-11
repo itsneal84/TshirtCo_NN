@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using TshirtCo_NN.Data;
 using TshirtCo_NN.Models;
 
@@ -13,20 +21,23 @@ namespace TshirtCo_NN.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _environment;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Products.Include(p => p.Categories);
+            var applicationDbContext = _context.Products.Include(p => p.Categories).Include(p=>p.Colours);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Products/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -35,7 +46,7 @@ namespace TshirtCo_NN.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.Categories)
+                .Include(p => p.Categories).Include(p=>p.Colours)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
@@ -49,6 +60,7 @@ namespace TshirtCo_NN.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewData["ColourId"] = new SelectList(_context.Colours, "ColourId", "ColourName");
             return View();
         }
 
@@ -57,17 +69,50 @@ namespace TshirtCo_NN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Price,StockLvl,Colour,Size,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Price,StockLvl,ColourId,Small,Medium,Large,XLarge,Image,CategoryId")] Product product)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                product.ProductId = Guid.NewGuid();
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(product);
             }
+
+            product.ProductId = Guid.NewGuid();
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+            
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
-            return View(product);
+            ViewData["ColourId"] = new SelectList(_context.Colours, "ColourId", "ColourName", product.Colours);
+
+            //save image
+            string webRootPath = _environment.WebRootPath;
+            //store uploaded image from view
+            var file = HttpContext.Request.Form.Files;
+            //connect to database & find productId
+            var dbProduct = _context.Products.Find(product.ProductId);
+            //check for previously uploaded files
+            if (file.Count != 0)
+            {
+                //if image has been uploaded find previous path & extension
+                var upload = Path.Combine(webRootPath, Image.ProductImageFolder);
+                var extension = Path.GetExtension(file[0].FileName);
+                //copy uploaded file using filestream to server with updated name 
+                using (var fileStream =
+                    new FileStream(Path.Combine(upload, product.ProductId + extension), FileMode.Create))
+                {
+                    file[0].CopyTo(fileStream);
+                }
+
+                dbProduct.Image = @"\" + Image.ProductImageFolder + @"\" + product.ProductId + extension;
+            }
+            else
+            {
+                var upload = Path.Combine(webRootPath, Image.ProductImageFolder + @"\" + Image.DefaultProductImage);
+                System.IO.File.Copy(upload, webRootPath + @"\" + Image.ProductImageFolder + @"\" + product.ProductId + ".jpg");
+                dbProduct.Image = @"\" + Image.ProductImageFolder + @"\" + product.ProductId + ".jpg";
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Products/Edit/5
@@ -83,7 +128,8 @@ namespace TshirtCo_NN.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+            ViewData["ColourId"] = new SelectList(_context.Colours, "ColourId", "ColourName", product.Colours);
             return View(product);
         }
 
@@ -92,7 +138,7 @@ namespace TshirtCo_NN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ProductId,ProductName,Price,StockLvl,Colour,Size,CategoryId")] Product product)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ProductId,ProductName,Price,StockLvl,ColourId,Small,Medium,Large,XLarge,Image,CategoryId")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -119,7 +165,8 @@ namespace TshirtCo_NN.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+            ViewData["ColourId"] = new SelectList(_context.Colours, "ColourId", "ColourName", product.Colours);
             return View(product);
         }
 
@@ -132,7 +179,7 @@ namespace TshirtCo_NN.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.Categories)
+                .Include(p => p.Categories).Include(p=>p.Colours)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {

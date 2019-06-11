@@ -1,0 +1,94 @@
+﻿@model TshirtCo_NN.Models.Order
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLn1)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AddressLn1)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressLn2)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AddressLn2)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PostCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PostCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderTotal)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderTotal)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Dispatched)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Dispatched)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateShipped)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateShipped)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentRef)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentRef)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="OrderId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

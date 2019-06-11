@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<table class="table">
+<thead>
+    <tr>
+        <th>
+            name
+        </th>
+        <th>
+            email
+        </th>
+        <th>
+            address
+        </th>
+        <th>
+            town
+        </th>
+        <th>
+            city
+        </th>
+        <th>
+            postcode
+        </th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var user in UserManager.Users)
+{
+    @*get only customers and ignore admin & staff*@
+    if (!user.Email.Contains("tshirt.co"))
+    {
+        <tr>
+            <td align="left">@user.FirstName @user.LastName</td>
+            <td align="left">@user.Email</td>
+            <td align="left">@user.AddressLn1</td>
+            <td align="left">@user.AddressLn2</td>
+            <td align="left">@user.City</td>
+            <td align="left">@user.PostCode</td>
+            <td align="left"><a asp-controller="Orders" asp-action="Index" >> orders</a></td>
+        </tr>
+    }
+}
+</tbody>
+</table>

@@ -1,8 +1,102 @@
-﻿
+﻿@model Order
 @{
     ViewData["Title"] = "AdminArea";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+<div class="row">
+    <a asp-controller="Orders" asp-action="Index">
+        <div class="admin-order-panel">
+            <div class="admin-panel-text">@ViewBag.Orders</div>
+        </div>
+    </a>
+    <a asp-controller="Home" asp-action="Users">
+        <div class="admin-customer-panel">
+            <div class="admin-panel-text">@ViewBag.Customers</div>
+        </div>
+    </a>
+    <a asp-controller="Products" asp-action="Index">
+        <div class="admin-product-panel">
+            <div class="admin-panel-text">@ViewBag.Products</div>
+        </div>
+    </a>
+</div>
+@* ---------- UNSENT ORDERS TO BE DISPLAYED ON ADMIN HOME SCREEN ---------- *@
+@*<div class="row">
+    <form asp-controller="Orders" asp-action="Dispatched" method="post">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        product
+                    </th>
+                    <th>
+                        colour
+                    </th>
+                    <th>
+                        size:
+                    </th>
+                    <th>
+                        total quantity:
+                    </th>
+                    <th>
+                        order total:
+                    </th>
+                    <th>
+                        payment ref:
+                    </th>
+                    <th>
+                        dispatched
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderLines)
+                {
+                    if (Model.Dispatched == false)
+                    {
+                        <tr>
+                            <td>
+                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                @item.Name <input type="hidden" name="ProductName" value="@item.Name" />
+                            </td>
 
-<h2>AdminArea</h2>
+                            <td>
+                                @item.Colour <input type="hidden" name="ProductColour" value="@item.Colour" />
+                            </td>
+                            <td>
+                                small: @item.Small <input type="hidden" name="Small" value="@item.Small" /> medium: @item.Medium <input type="hidden" name="Medium" value="@item.Medium" />
+                                large: @item.Large <input type="hidden" name="Large" value="@item.Large" /> xlarge: @item.XLarge <input type="hidden" name="XLarge" value="@item.XLarge" />
+                            </td>
+                            <td>
+                                @(item.Small + item.Medium + item.Large + item.XLarge)
+                            </td>
+                            <td>
+                                £@item.OrderLineTotal
+                            </td>
+                            <td>
+                                @Model.PaymentRef
+                            </td>
+                            <td>
+                                @if (Model.Dispatched = true)
+                                {
+                                    @Html.CheckBox("Dispatched", true);
+                                }
+                                else
+                                {
+                                    @Html.CheckBox("Dispatched", false, new { onclick = "this.form.submit();", item.ProductId, item.OrderId })
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>no items outstanding</tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </form>
+</div>*@
+
 

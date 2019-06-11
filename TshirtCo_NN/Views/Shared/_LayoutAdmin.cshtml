@@ -18,28 +18,33 @@
 </head>
 <body>
 <div class="site-wrapper">
-        <div class="col-sm-3 col-md-2 sidebar sidebar-admin">
-            <div class="sidebar-logo">
-                <a asp-controller="Home" asp-action="Index"><img src="~/images/logo_crop.svg" /></a>
-            </div>
-            <ul class="nav nav-sidebar">
-                <li><a asp-controller="Home" asp-action="AdminArea"><img src="~/images/icons/dashboard_ico.svg" class="sidebar-icon" />dashboard</a></li>
-                <li><a asp-controller="Products" asp-action="Create"><img src="~/images/icons/products_ico.svg" class="sidebar-icon" />products</a></li>
-                <li><a asp-controller="Categories" asp-action="Index"><img src="~/images/icons/category_ico.svg" class="sidebar-icon"/>categories</a></li>
-                <li><img src="~/images/icons/designs_ico.svg" class="sidebar-icon"/>designs</li>
-                <li><a asp-area="Identity" asp-page="/Account/Manage/Index"><img src="~/images/icons/users_ico.svg" class="sidebar-icon"/>customers</a></li>
-                <li><img src="~/images/icons/orders_ico.svg" class="sidebar-icon"/>orders</li>
-                <li><img src="~/images/icons/sales_ico.svg" class="sidebar-icon"/>sales</li>
-            </ul>
-            <footer>
-                <p>&copy; 2019 the t-shirt co <img src="~/images/icons/payment_ico.svg" height="15px"/></p>
-            </footer>
+    <div class="col-sm-3 col-md-2 sidebar sidebar-admin">
+        <div class="sidebar-logo">
+            <a asp-controller="Home" asp-action="Index"><img src="~/images/logo_crop.svg"/></a>
         </div>
+        <ul class="nav-sidebar">
+            <li><a asp-controller="Home" asp-action="AdminArea"><img src="~/images/icons/dashboard_ico.svg" class="sidebar-icon"/>dashboard</a></li>
+            <hr/>
+            <li><a asp-controller="Products" asp-action="Index"><img src="~/images/icons/products_ico.svg" class="sidebar-icon"/>products</a></li>
+            <ul class="nav-sidebar">
+                <li><a asp-controller="Products" asp-action="Create"><img src="~/images/icons/products_ico.svg" class="sidebar-icon"/>add</a></li>
+                <li><a asp-controller="Designs" asp-action="Create"><img src="~/images/icons/designs_ico.svg" class="sidebar-icon"/>designs</a></li>
+                <li><a asp-controller="Categories" asp-action="Index"><img src="~/images/icons/category_ico.svg" class="sidebar-icon"/>categories</a></li>
+                <li><a asp-controller="Colours" asp-action="Create"><img src="~/images/icons/colour_ico.svg" class="sidebar-icon"/>colour</a></li>
+            </ul>
+            <hr/>
+            <li><a asp-controller="Home" asp-action="Users"><img src="~/images/icons/users_ico.svg" class="sidebar-icon"/>customers</a></li>
+            <li><a asp-controller="Orders" asp-action="Index"><img src="~/images/icons/orders_ico.svg" class="sidebar-icon"/>orders</a></li>
+            <li><img src="~/images/icons/sales_ico.svg" class="sidebar-icon"/>sales</li>
+        </ul>
+        <footer>
+            <p>&copy; 2019 the t-shirt co <img src="~/images/icons/payment_ico.svg" height="15px"/></p>
+        </footer>
+    </div>
     <div class="main-content-container">
         <div class="right-content-container">@RenderBody()</div>
     </div>
 </div>
-
 <environment include="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>

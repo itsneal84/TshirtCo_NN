@@ -12,13 +12,26 @@
                 <li>
                     <a asp-controller="Home" asp-action="AdminArea">Admin</a>
                 </li>
+
+                <li>
+                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                </li>
+                <li>
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User) <img src="~/images/icons/user_ico.svg" class="user-icon" /></a>
+                </li>
             }
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-            </li>
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User) <img src="~/images/icons/user_ico.svg" class="user-icon"/></a>
-            </li>
+            else
+            {
+                <li>
+                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                </li>
+                @*<li>
+                    <a asp-controller="Orders" asp-action="UserOrders"><img src="~/images/icons/shop_ico.svg" class="user-icon" /></a>
+                </li>*@
+                <li>
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User) <img src="~/images/icons/user_ico.svg" class="user-icon" /></a>
+                </li>
+            }
         </ul>
     </form>
 }

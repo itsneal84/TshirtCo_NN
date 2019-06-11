@@ -1,0 +1,75 @@
+﻿@model TshirtCo_NN.Models.Order
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutPlain.cshtml";
+}
+
+
+<div class="form-container">
+    <div class="row">
+        <div class="col-md-10">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="OrderId" />
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="control-label">name</label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressLn1" class="control-label"></label>
+                        <input asp-for="AddressLn1" class="form-control" />
+                        <span asp-validation-for="AddressLn1" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="control-label">&nbsp;</label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressLn2" class="control-label"></label>
+                        <input asp-for="AddressLn2" class="form-control" />
+                        <span asp-validation-for="AddressLn2" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PostCode" class="control-label"></label>
+                        <input asp-for="PostCode" class="form-control" />
+                        <span asp-validation-for="PostCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <h4>products ordered</h4>
+                    @{ int counter = 0;}
+                    @foreach(OrderLine orderLine in ViewBag.OrderLines)
+                    {
+                        <input type="hidden" name="orderLines[@counter].OrderLineId" value="@orderLine.OrderLineId"/>
+                        <input type="hidden" name="orderLines[@counter].ProductId" value="@orderLine.ProductId"/>
+                        <input type="hidden" name="orderLines[@counter].OrderId" value="@Model.OrderId"/>
+                        <div class="row mt-1">
+                            <div class="col">@orderLine.Product.ProductName</div>
+                            <div class="col"><input type="number" name="Small"/>@orderLine.Product.Small</div>
+                            <div class="col">@orderLine.Product.Medium</div>
+                            <div class="col">@orderLine.Product.Colour</div>
+                            <div class="col">@orderLine.Product.Categories.CategoryName</div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                        <a asp-action="Index" class="btn btn-secondary">cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

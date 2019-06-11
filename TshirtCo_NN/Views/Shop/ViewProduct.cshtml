@@ -1,0 +1,72 @@
+﻿@model TshirtCo_NN.Models.Product
+
+@{
+    ViewData["Title"] = "ViewProduct";
+    Layout = "~/Views/Shared/_LayoutShop.cshtml";
+}
+
+<div class="product-image-container">
+    <img src="@Html.DisplayFor(model=>model.Image)" width="100%" />
+</div>
+
+<div class="product-details-container">
+    <form id="productId" asp-controller="Cart" asp-action="AddToCart" method="post">
+        <input type="hidden" name="ProductId" value="@Model.ProductId" />
+        <div class="product-text">
+            <h4>@Html.DisplayFor(model => model.ProductName) <input type="hidden" name="ProductName" value="@Model.ProductName" /></h4>
+        </div>
+        <div class="plain-div">
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.Price): @Html.DisplayFor(model => model.Price) <input type="hidden" name="Price" value="@Model.Price" />
+            </div>
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.Colours.ColourName): @Html.DisplayFor(model => model.Colours.ColourName) <input type="hidden" name="Colour" value="@Model.Colours.ColourName" />
+            </div>
+        </div>
+        <div class="plain-div">
+            @if (Model.Small >=1)
+            {
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.Small): <input type="number" name="Small" value="0" class="input-box" /> (@Html.DisplayFor(model => model.Small))
+            </div>
+            }
+            @if (Model.Medium >=1)
+            {
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.Medium): <input type="number" name="Medium" value="0" class="input-box" /> (@Html.DisplayFor(model => model.Medium))
+            </div>
+            }
+        </div>
+        <div class="plain-div">
+            @if (Model.Large >=1)
+            {
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.Large): <input type="number" name="Large" value="0" class="input-box" /> (@Html.DisplayFor(model => model.Large))
+            </div>
+            }
+            @if (Model.XLarge >=1)
+            {
+            <div class="product-text">
+                @Html.DisplayNameFor(model => model.XLarge): <input type="number" name="XLarge" value="0" class="input-box" /> (@Html.DisplayFor(model => model.XLarge))
+            </div>
+            }  
+        </div>
+        <hr />
+
+        @*@if (Model.Colour == Model.Designs.GarmentColourForPrint)
+        {
+            foreach (var designs in Model.Designs)
+            {
+
+            }
+            <div class="product-text">
+
+            </div>
+        }*@
+        <div class="plain-div">
+            <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+            <button type="submit" class="btn btn-success">add to cart</button>
+        </div>
+
+    </form>
+</div>

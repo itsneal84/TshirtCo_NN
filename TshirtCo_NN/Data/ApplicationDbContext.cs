@@ -20,6 +20,9 @@ namespace TshirtCo_NN.Data
             base.OnModelCreating(builder);
         }
 
+        /// <summary>
+        /// properties to connect all the classes to the database
+        /// </summary>
         public DbSet<Product> Products { get; set; }
         public DbSet<Design> Designs { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -27,6 +30,7 @@ namespace TshirtCo_NN.Data
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderLine> OrderLines { get; set; }
+        public DbSet<Colour> Colours { get; set; }
     }
 
 }

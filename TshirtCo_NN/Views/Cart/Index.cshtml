@@ -1,0 +1,86 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutPlain.cshtml";
+}
+
+<div class="center-container">
+    <h4>your cart</h4>
+    @if (Model.OlList.Count() == 0)
+    {
+        <div class="product-text"><h4>basket empty</h4></div>
+    }            
+    else
+    {
+        foreach (OrderLine orderLine in Model.OlList)
+        {
+            <div class="orderform-container">
+                <input type="hidden" name="productId" value="@orderLine.Product.ProductId" />
+                <table>
+                    <tr>
+                        <th class="cart-table-padding">product:</th>
+                        <td align="left">@orderLine.Product.ProductName <input type="hidden" name="ProductName" value="@orderLine.Product.ProductName" /></td>
+                    </tr>
+                    <tr>
+                        <th class="cart-table-padding">colour:</th>
+                        <td align="left">@orderLine.Colour <input type="hidden" name="Colour" value="@orderLine.Colour" /></td>
+                    </tr>
+                    @if (orderLine.Product.Small >= 1)
+                    {
+                        <tr>
+                            <th class="cart-table-padding"> small:</th>
+                            <td align="left"> @orderLine.Product.Small <input type="hidden" name="Small" value="@orderLine.Product.Small" /></td>
+                        </tr>
+                    }
+                    @if (orderLine.Product.Medium >= 1)
+                    {
+                        <tr>
+                            <th class="cart-table-padding">medium:</th>
+                            <td align="left">@orderLine.Product.Medium <input type="hidden" name="Medium" value="@orderLine.Product.Medium" /></td>
+                        </tr>
+                    }
+                    @if (orderLine.Product.Large >= 1)
+                    {
+                        <tr>
+                            <th class="cart-table-padding">large:</th>
+                            <td align="left">@orderLine.Product.Large <input type="hidden" name="Large" value="@orderLine.Product.Large" /></td>
+                        </tr>
+                    }
+                    @if (orderLine.Product.XLarge >= 1)
+                    {
+                        <tr>
+                            <th class="cart-table-padding">xlarge:</th>
+                            <td align="left">@orderLine.Product.XLarge <input type="hidden" name="XLarge" value="@orderLine.Product.XLarge" /></td>
+                        </tr>
+                    }
+                    <hr />
+                    <tr>
+                        <th class="cart-table-padding">total quantity:</th>
+                        <td align="left">@orderLine.Quantity <input type="hidden" name="Quantity" value="@orderLine.Quantity" /></td>
+                    </tr>
+                    <tr>
+                        <th class="cart-table-padding">price:</th>
+                        <td align="left">£@orderLine.Product.Price.ToString("f2") <input type="hidden" name="Price" value="@orderLine.Product.Price" /></td>
+                    </tr>
+                </table>
+                <div class="order-text">
+                    <form asp-action="RemoveFromCart">
+                        <button type="submit" name="productId" value="@orderLine.ProductId" class="btn btn-sm btn-danger">remove</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>
+<div class="center-container">
+                        <div class="order-total">
+                            <div class="product-text">total: £@(Model.OlList.Sum(p => p.Product.Price * p.Quantity).ToString("f2")) <input type="hidden" name="OrderTotal" value="Model.OlList.Sum(p => p.Product.Price * p.Quantity)" /></div>
+                            <div class="product-text">
+                                @if (ViewBag.returnUrl != null)
+                                {
+                                    <a href="@ViewBag.returnUrl" class="btn btn-default">continue shopping</a>
+                                    <a asp-action="CreateOrder" type="submit" class="btn btn-success">complete order</a>
+                                }
+                            </div>
+                        </div>
+</div>

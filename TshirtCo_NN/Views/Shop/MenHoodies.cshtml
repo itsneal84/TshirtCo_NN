@@ -1,0 +1,91 @@
+﻿@model IEnumerable<TshirtCo_NN.Models.Product>
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TshirtCo_NN</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <div class="site-wrapper">
+        <div class="col-sm-3 col-md-2 sidebar sidebar-shop">
+            <div class="sidebar-logo">
+                <a asp-controller="Home" asp-action="Index"><img src="~/images/logo_crop.svg" /></a>
+            </div>
+            <ul class="nav nav-sidebar">
+                <li><img src="~/images/icons/shop_ico.svg" class="sidebar-icon" />shop</li>
+                <li><a asp-controller="Shop" asp-action="Men">men</a></li>
+                <li><a asp-controller="Shop" asp-action="Women">women</a></li>
+                <hr />
+                <li><a asp-controller="Shop" asp-action="MenTshirt">t-shirts</a></li>
+                <li><a asp-controller="Shop" asp-action="MenHoodies">hoodies</a></li>
+                <li><a asp-controller="Shop" asp-action="MenSweats">sweatshirts</a></li>
+            </ul>
+            <footer>
+                <p>&copy; 2019 the t-shirt co <img src="~/images/icons/payment_ico.svg" height="15px" /></p>
+            </footer>
+        </div>
+        <div class="main-content-container">
+            <div class="right-content-container">
+                <div class="right-nav">
+                    <partial name="_LoginPartial" />
+                </div>
+                <div class="row">
+                @*if there are no products*@ 
+                @if (!Model.Any())
+                {
+                    <h4>sorry no men's hoodies available</h4>
+                }
+                else
+                {
+                    @*otherwise loop through & display them*@
+                    foreach (var item in Model)
+                    {
+                        <div class="home-product-container">
+                            <a asp-controller="Shop" asp-action="ViewProduct" asp-route-id="@item.ProductId"><img src="@Html.DisplayFor(modelItem => item.Image)" width="100%"/></a>
+                        </div>
+                    }
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+</body>
+</html>
+

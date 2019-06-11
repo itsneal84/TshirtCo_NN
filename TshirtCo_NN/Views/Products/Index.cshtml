@@ -14,19 +14,28 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StockLvl)
+                @Html.DisplayNameFor(model => model.Colours)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Colour)
+                @Html.DisplayNameFor(model => model.Small)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Size)
+                @Html.DisplayNameFor(model => model.Medium)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Large)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XLarge)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
@@ -38,27 +47,36 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                <img src="@Html.DisplayFor(modelItem => item.Image)" width="80px" />
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ProductName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StockLvl)
+                @Html.DisplayFor(modelItem => item.Colours.ColourName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Colour)
+                @Html.DisplayFor(modelItem => item.Small)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Size)
+                @Html.DisplayFor(modelItem => item.Medium)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categories.CategoryId)
+                @Html.DisplayFor(modelItem => item.Large)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                @Html.DisplayFor(modelItem => item.XLarge)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categories.CategoryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">edit</a> |
+                @*<a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |*@
+                <a asp-action="Delete" asp-route-id="@item.ProductId">delete</a>
             </td>
         </tr>
 }

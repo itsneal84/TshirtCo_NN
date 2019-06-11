@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@model IEnumerable<TshirtCo_NN.Models.Product>
 @{
     Layout = null;
 }
@@ -24,26 +25,24 @@
 <body>
     <div class="site-wrapper">
         <div class="site-wrapper-inner">
+            <a asp-controller="Shop" asp-action="Men"><div class="empty-container-left"></div></a>
+            <a asp-controller="Shop" asp-action="Women"><div class="empty-container-right"></div></a>
             <div class="cover-container">
                 <div class="masthead clearfix">
                     <div class="top-nav-main">
-                        <img src="~/images/logo_crop.svg" width="70%" class="logo-main" />
+                        <img src="~/images/logo_crop.svg" width="70%" class="logo-main"/>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="right-nav">
-                <partial name="_LoginPartial"/>
-            </div>
+    <div class="home-container-2">
             <div class="col-sm-3 col-md-2 sidebar sidebar-main">
                 <div class="sidebar-logo">
                     <img src="images/logo_crop.svg" />
                 </div>
-                <ul class="nav nav-sidebar">
-                    <li><img src="~/images/icons/shop_ico.svg" class="sidebar-icon"/>shop</li>
+                <ul class="nav-sidebar">
+                    <li><a asp-controller="Shop" asp-action="Index"><img src="~/images/icons/shop_ico.svg" class="sidebar-icon" />shop</a></li>
                     <li><img src="~/images/icons/design_ico.svg" class="sidebar-icon"/>designs</li>
                     <li><img src="~/images/icons/about_ico.svg" class="sidebar-icon"/>about</li>
                     <li><img src="~/images/icons/contact_ico.svg" class="sidebar-icon"/>contact</li>
@@ -52,12 +51,20 @@
                     <p>&copy; 2019 the t-shirt co <img src="~/images/icons/payment_ico.svg" height="15px"/></p>
                 </footer>
             </div>
-            <div class="main-content-container">
                 <div class="right-content-container">
-                    Products will go here
+                    <div class="right-nav">
+                        @await Component.InvokeAsync("Cart", Context.Session)
+                        <partial name="_LoginPartial" />
+                    </div>
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+                            <div class="home-product-container">
+                                <a asp-controller="Shop" asp-action="ViewProduct" asp-route-id="@item.ProductId"><img src="@Html.DisplayFor(modelItem => item.Image)" width="100%"/></a>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        </div>
     </div>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

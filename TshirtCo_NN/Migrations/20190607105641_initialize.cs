@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TshirtCo_NN.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,16 +69,15 @@ namespace TshirtCo_NN.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Designs",
+                name: "Colours",
                 columns: table => new
                 {
-                    DesignId = table.Column<Guid>(nullable: false),
-                    DesignName = table.Column<string>(nullable: true),
-                    GarmentColourForPrint = table.Column<string>(nullable: true)
+                    ColourId = table.Column<Guid>(nullable: false),
+                    ColourName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Designs", x => x.DesignId);
+                    table.PrimaryKey("PK_Colours", x => x.ColourId);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,17 +191,20 @@ namespace TshirtCo_NN.Migrations
                 columns: table => new
                 {
                     OrderId = table.Column<Guid>(nullable: false),
-                    CustomerId = table.Column<string>(nullable: true),
-                    ProductId = table.Column<Guid>(nullable: false),
-                    ProductName = table.Column<string>(nullable: true),
-                    ProductColour = table.Column<string>(nullable: true),
-                    ProductSize = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    AddressLn1 = table.Column<string>(nullable: true),
+                    AddressLn2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    PostCode = table.Column<string>(nullable: true),
                     DesignId = table.Column<Guid>(nullable: false),
                     OrderTotal = table.Column<double>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: true),
-                    ShippingAddress = table.Column<string>(nullable: true),
+                    Dispatched = table.Column<bool>(nullable: false),
                     DateShipped = table.Column<DateTime>(nullable: true),
-                    PaymentDetails = table.Column<string>(nullable: true)
+                    PaymentRef = table.Column<string>(nullable: true),
+                    CustomerId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -216,6 +218,27 @@ namespace TshirtCo_NN.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Designs",
+                columns: table => new
+                {
+                    DesignId = table.Column<Guid>(nullable: false),
+                    DesignName = table.Column<string>(nullable: true),
+                    GarmentColourForPrint = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true),
+                    ColourId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Designs", x => x.DesignId);
+                    table.ForeignKey(
+                        name: "FK_Designs_Colours_ColourId",
+                        column: x => x.ColourId,
+                        principalTable: "Colours",
+                        principalColumn: "ColourId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -223,9 +246,15 @@ namespace TshirtCo_NN.Migrations
                     ProductName = table.Column<string>(nullable: false),
                     Price = table.Column<double>(nullable: false),
                     StockLvl = table.Column<int>(nullable: false),
-                    Colour = table.Column<string>(nullable: false),
-                    Size = table.Column<string>(nullable: false),
-                    CategoryId = table.Column<Guid>(nullable: false)
+                    Small = table.Column<int>(nullable: false),
+                    Medium = table.Column<int>(nullable: false),
+                    Large = table.Column<int>(nullable: false),
+                    XLarge = table.Column<int>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    CategoryId = table.Column<Guid>(nullable: false),
+                    ColourId = table.Column<Guid>(nullable: false),
+                    Colour = table.Column<string>(nullable: true),
+                    DesignsDesignId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -236,6 +265,18 @@ namespace TshirtCo_NN.Migrations
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Products_Colours_ColourId",
+                        column: x => x.ColourId,
+                        principalTable: "Colours",
+                        principalColumn: "ColourId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Products_Designs_DesignsDesignId",
+                        column: x => x.DesignsDesignId,
+                        principalTable: "Designs",
+                        principalColumn: "DesignId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -243,21 +284,34 @@ namespace TshirtCo_NN.Migrations
                 columns: table => new
                 {
                     OrderLineId = table.Column<Guid>(nullable: false),
-                    ProductId = table.Column<Guid>(nullable: false),
-                    UnitPrice = table.Column<double>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
                     OrderLineTotal = table.Column<double>(nullable: false),
-                    OrderId = table.Column<Guid>(nullable: true)
+                    OrderId = table.Column<Guid>(nullable: false),
+                    ProductId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Price = table.Column<double>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    Colour = table.Column<string>(nullable: true),
+                    Small = table.Column<int>(nullable: false),
+                    Medium = table.Column<int>(nullable: false),
+                    Large = table.Column<int>(nullable: false),
+                    XLarge = table.Column<int>(nullable: false),
+                    ColoursColourId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderLines", x => x.OrderLineId);
                     table.ForeignKey(
+                        name: "FK_OrderLines_Colours_ColoursColourId",
+                        column: x => x.ColoursColourId,
+                        principalTable: "Colours",
+                        principalColumn: "ColourId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_OrderLines_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderLines_Products_ProductId",
                         column: x => x.ProductId,
@@ -306,6 +360,16 @@ namespace TshirtCo_NN.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Designs_ColourId",
+                table: "Designs",
+                column: "ColourId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_ColoursColourId",
+                table: "OrderLines",
+                column: "ColoursColourId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_OrderId",
                 table: "OrderLines",
                 column: "OrderId");
@@ -324,6 +388,16 @@ namespace TshirtCo_NN.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ColourId",
+                table: "Products",
+                column: "ColourId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_DesignsDesignId",
+                table: "Products",
+                column: "DesignsDesignId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -344,9 +418,6 @@ namespace TshirtCo_NN.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Designs");
-
-            migrationBuilder.DropTable(
                 name: "OrderLines");
 
             migrationBuilder.DropTable(
@@ -363,6 +434,12 @@ namespace TshirtCo_NN.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Designs");
+
+            migrationBuilder.DropTable(
+                name: "Colours");
         }
     }
 }

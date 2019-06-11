@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TshirtCo_NN.Models.Order>
+
+@{
+    ViewData["Title"] = "UserOrders";
+    Layout = "~/Views/Shared/_LayoutPlain.cshtml";
+}
+
+<h2>my orders</h2>
+<div class="large-form-container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderTotal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentRef)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.OrderByDescending(order => order.OrderDate)) {
+            <tr>
+                <td align="left">
+                    @Html.DisplayFor(modelItem => item.OrderTotal)
+                </td>
+                <td align="left">
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td align="left">
+                    @Html.DisplayFor(modelItem => item.PaymentRef)
+                </td>
+                <td align="left">
+                    <a asp-action="MyOrderDetails" asp-route-id="@item.OrderId">Details</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-default">my account</a>
+</div>

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -15,7 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using TshirtCo_NN.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using TshirtCo_NN.Models;
+using TshirtCo_NN.Models.Repository;
 
 namespace TshirtCo_NN
 {
@@ -31,12 +32,17 @@ namespace TshirtCo_NN
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddJsonOptions(options =>
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize);
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddSingleton<IFileProvider>(
+                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -99,11 +105,22 @@ namespace TshirtCo_NN
                     options.Conventions.AuthorizeAreaFolder("Identity", "/Acount/Manage");
                     options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
                 });
+
+            services.AddTransient<IRepository, DataRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IOrdersRepository, OrdersRepository>();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "TshirtCo.Session";
+                options.IdleTimeout = System.TimeSpan.FromHours(48);
+                options.Cookie.HttpOnly = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -118,6 +135,7 @@ namespace TshirtCo_NN
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseAuthentication();
 
@@ -152,6 +170,16 @@ namespace TshirtCo_NN
             ApplicationUser user = await UserManager.FindByEmailAsync("ian@tshirt.co");
             var User = new ApplicationUser();
             await UserManager.AddToRoleAsync(user, "Admin");
+
+            //add staff role
+            var staffRoleCheck = await RoleManager.RoleExistsAsync("Staff");
+
+            //if role doesnt exist
+            if (!staffRoleCheck)
+            {
+                //create it
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Staff"));
+            }
         }
     }
 }
